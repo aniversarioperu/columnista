@@ -13,6 +13,8 @@ import random
 
 from flask import Flask, render_template
 
+from editorial import tema_del_dia
+
 
 class Issue:
 
@@ -260,7 +262,17 @@ def build_third_para(problem, entity):
 
 
 def gen_column():
-	parameters = problem_picker()
+	if tema_del_dia() is not None:
+		for i in problem_list:
+			if i.name == tema_del_dia().encode("utf-8"):
+				active_problem = i
+				active_problem.select_entity()
+				for entity in entity_list:
+					if entity.name == active_problem.entity:
+						active_entity = entity
+						parameters = (active_problem, active_entity)
+	else:
+		parameters = problem_picker()
 	problem = parameters[0]
 	entity = parameters[1]
 
